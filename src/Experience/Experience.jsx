@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useMemo } from "react";
-import { Canvas, extend, useThree } from "@react-three/fiber";
-import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
+import { Canvas, extend } from "@react-three/fiber";
+import { PerspectiveCamera } from "@react-three/drei";
 import Scene from "./Scene";
-import * as THREE from "three/webgpu";
+import * as THREE from "three";
 import { WebGLRenderer } from "three";
 import normalizeWheel from "normalize-wheel";
 
@@ -90,6 +90,7 @@ const Experience = () => {
 
     window.addEventListener("wheel", handleWheel, { passive: false });
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mousemove", handleMouseDrag);
     window.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("touchstart", handleTouchStart, { passive: false });
@@ -113,17 +114,8 @@ const Experience = () => {
       shadows
       flat={true}
       gl={(props) => {
-        extend(THREE);
-        const supportsWebGPU =
-          typeof navigator !== "undefined" &&
-          typeof navigator.gpu !== "undefined";
-        if (supportsWebGPU) {
-          const renderer = new THREE.WebGPURenderer(props);
-          return renderer.init().then(() => renderer);
-        } else {
-          const renderer = new WebGLRenderer(props);
-          return renderer;
-        }
+        const renderer = new WebGLRenderer(props);
+        return renderer;
       }}
       style={{ width: "100vw", height: "100vh" }}
     >
