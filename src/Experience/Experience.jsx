@@ -3,6 +3,7 @@ import { Canvas, extend, useThree } from "@react-three/fiber";
 import { PerspectiveCamera, OrbitControls } from "@react-three/drei";
 import Scene from "./Scene";
 import * as THREE from "three/webgpu";
+import { WebGLRenderer } from "three";
 import normalizeWheel from "normalize-wheel";
 
 const Experience = () => {
@@ -120,7 +121,7 @@ const Experience = () => {
           const renderer = new THREE.WebGPURenderer(props);
           return renderer.init().then(() => renderer);
         } else {
-          const renderer = new THREE.WebGLRenderer(props);
+          const renderer = new WebGLRenderer(props);
           return renderer;
         }
       }}
