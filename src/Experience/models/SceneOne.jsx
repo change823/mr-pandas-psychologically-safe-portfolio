@@ -58,6 +58,25 @@ export default function Model(props) {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
+    const refsReady =
+      dragonHead.current &&
+      dragonLegFrontLeft.current &&
+      dragonLegBackLeft.current &&
+      dragonLegFrontRight.current &&
+      dragonLegBackRight.current &&
+      grass1.current &&
+      grass2.current &&
+      grass3.current &&
+      grass4.current &&
+      grass5.current &&
+      grass6.current &&
+      grass7.current &&
+      grass8.current &&
+      grass9.current &&
+      grass10.current &&
+      grass11.current;
+
+    if (!refsReady) return;
 
     dragonHead.current.rotation.y = 0.2 * Math.sin(t * 0.8);
     dragonLegFrontLeft.current.rotation.y = 0.3 * Math.sin(t + Math.PI);

@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useMemo } from "react";
-import { Canvas, extend } from "@react-three/fiber";
+import { useRef, useEffect, useState } from "react";
+import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import Scene from "./Scene";
 import * as THREE from "three";
@@ -18,6 +18,22 @@ const Experience = () => {
   const mousePositionOffset = useRef(new THREE.Vector3());
   const mouseRotationOffset = useRef(new THREE.Euler());
   const lastTouchY = useRef(null);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const handleWheel = (e) => {
@@ -48,12 +64,13 @@ const Experience = () => {
     };
 
     const handleTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
       isSwiping.current = true;
       lastTouchY.current = e.touches[0].clientY;
     };
 
     const handleTouchMove = (e) => {
-      if (!isSwiping.current) return;
+      if (!isSwiping.current || !e.touches || e.touches.length === 0) return;
 
       if (lastTouchY.current !== null) {
         const deltaY = e.touches[0].clientY - lastTouchY.current;
@@ -67,7 +84,7 @@ const Experience = () => {
       lastTouchY.current = e.touches[0].clientY;
     };
 
-    const handleTouchEnd = (e) => {
+    const handleTouchEnd = () => {
       isSwiping.current = false;
       lastTouchY.current = null;
     };
@@ -113,8 +130,29 @@ const Experience = () => {
     <Canvas
       shadows
       flat={true}
+      dpr={[1, 1.5]}
+      fallback={
+        <div
+          style={{
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#111",
+            background: "#fff",
+            fontFamily: "Plus Jakarta Sans, sans-serif",
+          }}
+        >
+          WebGL is required to view this portfolio.
+        </div>
+      }
       gl={(props) => {
-        const renderer = new WebGLRenderer(props);
+        const renderer = new WebGLRenderer({
+          ...props,
+          antialias: false,
+          powerPreference: "high-performance",
+        });
         return renderer;
       }}
       style={{ width: "100vw", height: "100vh" }}
@@ -134,7 +172,7 @@ const Experience = () => {
         <PerspectiveCamera
           ref={camera}
           makeDefault
-          fov={35}
+          fov={isMobile ? 44 : 35}
           // position={[0, 0, 30]}
         />
         {/* <OrbitControls enableZoom={false} enableRotate={false} /> */}

@@ -57,6 +57,7 @@ export default function Model({ scrollProgress, ...props }) {
 
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
+    if (!planeRef.current) return;
 
     planeRef.current.position.y = 0.2 * Math.sin(t * 0.4) + 8.3;
     planeRef.current.rotation.y = 0.02 * Math.sin(t * 0.4);

@@ -107,6 +107,8 @@ const Scene = ({
   };
 
   useFrame(() => {
+    if (!cameraGroup.current || !camera.current) return;
+
     let newProgress = THREE.MathUtils.lerp(
       scrollProgress.current,
       targetScrollProgress.current,
@@ -173,6 +175,7 @@ const Scene = ({
     }
 
     const basePoint = cameraScrollCurve.getCurrentPoint(newProgress);
+    if (!basePoint) return;
 
     // console.log(basePoint);
 

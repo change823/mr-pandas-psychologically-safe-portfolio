@@ -25,6 +25,13 @@ export default function Model(props) {
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
+    const refsReady =
+      oceanOne.current &&
+      oceanTwo.current &&
+      oceanThree.current &&
+      dolphinRef.current;
+
+    if (!refsReady) return;
 
     oceanOne.current.position.y = 0.24 * Math.sin(t + Math.PI / 4) + 1;
     oceanTwo.current.position.y = 0.2 * Math.sin(t) + 1.4;

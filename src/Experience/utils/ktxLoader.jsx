@@ -1,7 +1,7 @@
 import { KTX2Loader } from "three/addons/loaders/KTX2Loader.js";
 import * as THREE from "three";
 import { useLoader, useThree } from "@react-three/fiber";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export const useKTX2Texture = (
   textureUrl,
@@ -16,12 +16,6 @@ export const useKTX2Texture = (
     loader.detectSupport(gl);
   });
 
-  useEffect(() => {
-    if (texture) {
-      gl.initTexture(texture);
-    }
-  }, [gl, texture]);
-
   const material = useMemo(() => {
     if (!texture) return null;
 
@@ -31,7 +25,7 @@ export const useKTX2Texture = (
       alphaTest: alphaTestValue,
       side: side === "front" ? THREE.FrontSide : THREE.DoubleSide,
     });
-  }, [texture, transparent, alphaTestValue]);
+  }, [texture, transparent, alphaTestValue, side]);
 
   return material;
 };
