@@ -56,7 +56,7 @@ const Experience = () => {
 
       if (lastTouchY.current !== null) {
         const deltaY = e.touches[0].clientY - lastTouchY.current;
-        const touchMultiplier = 0.3;
+        const touchMultiplier = 1.2;
         targetScrollProgress.current +=
           Math.sign(deltaY) *
           baseScrollSpeed *
@@ -80,7 +80,7 @@ const Experience = () => {
       if (!isSwiping.current || e.pointerType === "touch") return;
       const mouseMultiplier = 0.2;
       targetScrollProgress.current +=
-        Math.sign(e.movementY) * scrollSpeed * mouseMultiplier;
+        Math.sign(e.movementY) * baseScrollSpeed * mouseMultiplier;
     };
 
     const handleMouseUp = () => {
@@ -113,8 +113,16 @@ const Experience = () => {
       flat={true}
       gl={(props) => {
         extend(THREE);
-        const renderer = new THREE.WebGPURenderer(props);
-        return renderer.init().then(() => renderer);
+        const supportsWebGPU =
+          typeof navigator !== "undefined" &&
+          typeof navigator.gpu !== "undefined";
+        if (supportsWebGPU) {
+          const renderer = new THREE.WebGPURenderer(props);
+          return renderer.init().then(() => renderer);
+        } else {
+          const renderer = new THREE.WebGLRenderer(props);
+          return renderer;
+        }
       }}
       style={{ width: "100vw", height: "100vh" }}
     >
